@@ -1,17 +1,11 @@
 import sys
-sys.path.append("/home/dneems/Data/Eppiemico Data/functions")
 from gensim import corpora, models, similarities
 from flask import render_template, request
 from app import app
 import pymysql as mdb
-import SQL_Calls
 import os
 from collections import Counter
 import matplotlib.pyplot as plt
-import Word_Processing
-from wordcloud import WordCloud
-from Word_Processing import Frequency_dist as FD
-import Text_Filtering
 import pickle
 from flask import jsonify
 import pickle
@@ -110,74 +104,9 @@ def query_drug():
   for k,v in (dict(Counter(subreddit_list))).iteritems():
     subreddit_freq_List.append({'name':k, 'number':v })
   subreddit_freq_List = sorted(subreddit_freq_List, reverse=True, key=lambda k: k['number']) 
-  #json_list = json.dumps(subreddit_freq_List[:requested_subreddits])
+
   return render_template("Single_Drug.html", prod_table = Product_Info, num_subreddits = requested_subreddits,
     drug =product_name, subreddits=subreddit_freq_List[:requested_subreddits], Word_Bubble=Word_Bubble) 
 
 
 
-@app.route('/output_nospam')
-def cities_output_nospam():
-  #pull 'ID' from input field and store it
-  product_name = request.args.get('Drug_ID')
-  requested_subreddits = int(request.args.get('Num_SR'))
-
-  db = mdb.connect(user="root", host="localhost", db="epi_reddit",  charset='utf8') 
-  
-  with db: 
-    cur = db.cursor()
-    #just select the product name from the epi_reddit that the user inputs
-    cur.execute("SELECT name, product_ID FROM product WHERE name='%s';" % product_name)
-    query_results = cur.fetchall()
-    products = []
-    for result in query_results:
-        products.append(dict(name=result[0], product_ID=result[1]))
-        cur.execute("SELECT COUNT(*) FROM product_lookup WHERE product_ID='%s';" % result[1])
-        result = cur.fetchall()
-        products[-1]['mentions']=str(result[0][0])
-
-    Single_Drug = SQL_Calls.Single_Product_Table(name=product_name)
-    gr = Text_Filtering.id_spam(Single_Drug[1])
-    Spam_Rate=Text_Filtering.spam_rate(gr,Single_Drug[1])
-    Single_Drug=Text_Filtering.rm_spam(gr,Single_Drug[1],Single_Drug[0])
-    products[-1]['mentions']=str(len(Single_Drug[1]))
-
-
-    Reddit_Counter = Counter(list(Single_Drug[0].subreddit));
-    subreddits = []
-    for sr in Reddit_Counter.most_common(requested_subreddits):
-        subreddits.append(dict(name=sr[0], number=sr[1]))
-    plt.ioff()
-    Tokens = Word_Processing.create_tokens(Single_Drug[1], min_char = 3)
-    wordcloud = WordCloud().generate(' '.join(Tokens))
-    plt.imshow(wordcloud)
-    plt.axis("off")
-    plt.savefig('/home/dneems/app/static/Word_Cloud_%s_nospam.png' % product_name)
-    plt.close()
-        
-    fdist=FD([Tokens])
-    Freqncy = []
-    for w in fdist.most_common(25):
-        try:
-           Freqncy.append(Freqncy[-1] +fdist.freq(w[0]))
-        except:
-           Freqncy.append(fdist.freq(w[0]))
-           
-          
-    plt.plot(Freqncy)
-    plt.xticks(range(25), [str(w[0]) for w in fdist.most_common(25)], rotation = "vertical")
-    plt.subplots_adjust(bottom=0.25)
-    Max_Val=round((max(Freqncy)*100 % 5) *5 + max(Freqncy)*100)
-    plt.yticks([x/100.0 for x in range(0,int(Max_Val)+1,5)],['{:3.2f}%'.format(x) for x in range(0,int(Max_Val)+1,5)])
-    plt.title('Top 25 Most Common Words')
-    plt.savefig('/home/dneems/app/static/Common_Words_%s_nospam.png' % product_name)
-    plt.close()
-   
-
-
-
-  #call a function from a_Model package. note we are only pulling one result in the query
-  #pop_input = products[0]['population']
-  #the_result = ModelIt(city, pop_input)
-  return render_template("output_nospam.html", prod_table = products, num_subreddits = requested_subreddits, 
-         subreddits = subreddits, drug =product_name, spam_rate = Spam_Rate)
