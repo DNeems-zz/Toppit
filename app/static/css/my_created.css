@@ -1,0 +1,9 @@
+.wide_element {
+    padding: 15px;
+    text-align: left;
+}
+
+.seperater {
+	border-top: 3px double #8c8b8b; 
+	width: 1230px;
+}
