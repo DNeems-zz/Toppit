@@ -30,7 +30,7 @@ def autocomplete():
 
 @app.route('/summaries')
 def summaries():
-  with open('/home/dneems/app/Data/Drug_Summary.pkl','rb') as f:
+  with open('app/static/Data/Drug_Summary.pkl','rb') as f:
     Sorted_Found_Drug= pickle.load(f)
   return render_template("summaries.html", drug_summary = Sorted_Found_Drug)
 
@@ -137,6 +137,6 @@ def query_drug():
     if len(Result) == 0:
       Source = product_name + ' was not found in any Reddit comments' 
     else:
-      Source = '100 Percent of ' + product_name + ' mentions were spam'
+      Source = '100 Percent of ' +product_name + ' mentions were spam'
     return render_template("No_Drug.html", Source=Source)
 
