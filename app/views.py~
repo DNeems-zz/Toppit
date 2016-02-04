@@ -104,7 +104,7 @@ def query_drug():
   for k,v in (dict(Counter(subreddit_list))).iteritems():
     subreddit_freq_List.append({'name':k, 'number':v })
   subreddit_freq_List = sorted(subreddit_freq_List, reverse=True, key=lambda k: k['number']) 
-  #json_list = json.dumps(subreddit_freq_List[:requested_subreddits])
+
   return render_template("Single_Drug.html", prod_table = Product_Info, num_subreddits = requested_subreddits,
     drug =product_name, subreddits=subreddit_freq_List[:requested_subreddits], Word_Bubble=Word_Bubble) 
 
