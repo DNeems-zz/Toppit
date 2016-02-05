@@ -1,0 +1,25 @@
+Ritalin,60878,61629
+unknown drug,44691,68178
+Adderall,18228,19329
+methylphenidate,12813,12987
+Estradiol,11422,13698
+Levitra,7473,12125
+Topamax,7447,9464
+Concerta,7441,7996
+Viagra,6656,14659
+Propranolol,6152,8727
+Lantus,5982,6126
+Imodium Multi-Symptom,5499,7102
+amphetamine,5190,5329
+Cialis,5020,10832
+Vyvanse,4653,4954
+propofol,4370,4408
+Keppra,4240,4772
+Baclofen,3603,5236
+Nolvadex,3574,4530
+Clomid,3569,5359
+Arimidex,3381,3868
+amphetamines,3334,3366
+vardenafil,3268,4592
+tamoxifen,3107,4325
+Femara,2980,3306

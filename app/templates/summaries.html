@@ -62,14 +62,35 @@
     </div>
 
 <br><br> 
-    <table class="table table-hover", style ="margin-top: 2cm;">
-    <tr style ="font-size:20px;"><th >Name</th><th>Mentions</th><th>Percent Spam</th></tr>
-    {% for drug in drug_summary %}
-    <tr><td>{{ drug['name'] }}</td><td>{{ drug['mentions']}}</td><td> {{ drug['spam rate'] }}</td></tr>
-    {% endfor %}
-    </table>
+    <div class="container">
+    <h3>Top 25 Drugs by total number of posts </h3>
+      <table class="table table-hover", style ="margin-top: 2cm;">
+        <tr style ="font-size:20px;"><th >Name</th><th>Total Posts</th><th>Percent Spam</th>
+          </tr>
+            {% for drug in Top_Mentions %}
+            <tr><td>{{ drug[0]}}</td><td>{{ drug[1]}}</td><td>{{ drug[2] }}</td></tr>
+            {% endfor %}
+      </table>
 
+    <h3>Top 25 Drugs by total number of non-spam posts </h3>
+      <table class="table table-hover", style ="margin-top: 2cm;">
+        <tr style ="font-size:20px;"><th >Name</th><th>Non-Spam Posts</th><th>Total Posts</th>
+          </tr>
+            {% for drug in Top_Good_Mentions %}
+            <tr><td>{{ drug[0]}}</td><td>{{ drug[1]}}</td><td> {{ drug[2] }}</td></tr>
+            {% endfor %}
+      </table>
 
+    <h3>Top 25 Drugs Subreddits for drug conversations </h3>
+      <table class="table table-hover", style ="margin-top: 2cm;">
+        <tr style ="font-size:20px;"><th >Name</th><th>Normalized Post count*</th><th>Post in Subreddit</th><th>Subreddit Subscribers</th>
+          </tr>
+            {% for drug in Top_SRs %}
+            <tr><td>{{ drug[0]}}</td><td>{{ drug[1]}}</td><td> {{ drug[2] }}</td><td> {{ drug[3] }}</td></tr>
+            {% endfor %}
+      </table>
+      <p>* Counts are nomalized by divding the number of posts in a subreddit by the Log10 of the number of subscribers to that subreddit</p>
+    </div>
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->

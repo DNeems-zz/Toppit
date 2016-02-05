@@ -1,0 +1,25 @@
+unknown drug,68178,34.45%
+Ritalin,61629,1.22%
+Adderall,19329,5.70%
+Viagra,14659,54.59%
+Estradiol,13698,16.62%
+methylphenidate,12987,1.34%
+Levitra,12125,38.37%
+Cialis,10832,53.66%
+Topamax,9464,21.31%
+Propranolol,8727,29.51%
+Concerta,7996,6.94%
+Imodium Multi-Symptom,7102,22.57%
+Atenolol,6774,60.72%
+metoprolol tartrate,6360,66.04%
+Lantus,6126,2.35%
+sildenafil,5783,51.37%
+ibuprofen,5440,80.83%
+Plavix,5396,62.97%
+Clomid,5359,33.40%
+amphetamine,5329,2.61%
+Baclofen,5236,31.19%
+Vyvanse,4954,6.08%
+Xanax,4798,49.81%
+Keppra,4772,11.15%
+Wellbutrin,4721,42.55%

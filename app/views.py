@@ -30,9 +30,24 @@ def autocomplete():
 
 @app.route('/summaries')
 def summaries():
-  with open('app/static/Data/Drug_Summary.pkl','rb') as f:
-    Sorted_Found_Drug= pickle.load(f)
-  return render_template("summaries.html", drug_summary = Sorted_Found_Drug)
+  #Top 25 by total mentions
+  Top_Mentions = []
+  with open('app/static/Data/Top25_Drug.txt','r') as f:
+    for line in f:
+      Top_Mentions.append(line.strip().split(','))
+  #Top 25 by non-spam comments
+  
+  Top_Good_Mentions = []
+  with open('app/static/Data/Top25_Good_Drug.txt','r') as f:
+    for line in f:
+      Top_Good_Mentions.append(line.strip().split(','))    
+
+  #Top 25 subreeddit normalized by diving post number by log10 of SR subscribers  
+  Top_SRs = []
+  with open('app/static/Data/Top25_SRs.txt','r') as f:
+    for line in f:
+      Top_SRs.append(line.strip().split(','))    
+  return render_template("summaries.html", Top_Mentions = Top_Mentions, Top_Good_Mentions=Top_Good_Mentions, Top_SRs=Top_SRs)
 
 @app.route('/')
 
@@ -88,7 +103,11 @@ def query_drug():
       with open('app/static/Tokens/drug/'+ File,'rb') as f:
         Comments = pickle.load(f)
       Tokens = [x['Tokens'] for x in Comments]
-      
+      if len(Comments) == 500:
+        At_500 = 'Only Data for the Top 500 Posts are Shown'
+      else:
+        At_500 =''
+
       #Load in pre-trained LDA model 
       L = models.LdaModel.load('app/static/model/All_Drug_Drugs_RM_WC_SPAM.mdl', mmap='r')
       dictionary = corpora.Dictionary.load('app/static/model/All_Drug_Drugs_RM_WC_SPAM.dict')
@@ -110,7 +129,10 @@ def query_drug():
       Topic_List = []
       for i,c in dict(Counter(Ordered_Topic_List)).items():
         Topic_List.append({'name':Topic[i-1],'size':c})
-      
+      Topic_List = sorted(Topic_List, key=lambda x: x['size'], reverse = True)
+
+
+
       #Build Dictionary for word cloud
       All_Tokens = []
       for T in Tokens:
@@ -131,7 +153,7 @@ def query_drug():
       subreddit_freq_List = sorted(subreddit_freq_List, reverse=True, key=lambda k: k['number']) 
       SR = subreddit_freq_List[:requested_subreddits]
       return render_template("Single_Drug.html", prod_table = Product_Info, num_subreddits = requested_subreddits,
-      drug =product_name, Word_Cloud=Word_Cloud[:100],subreddits=SR, Topic_List = Topic_List) 
+      drug =product_name, Word_Cloud=Word_Cloud[:100],subreddits=SR, Topic_List = Topic_List, Warning=At_500) 
 
   else: 
     if len(Result) == 0:
