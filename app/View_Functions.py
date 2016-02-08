@@ -83,7 +83,6 @@ def Compute_Binomial_Prob(Topic_List,Global_Topic_Count):
 	Global_Keys =Global_Topic_Count.keys()
 	i = 0
 	for key,val in dict(Counter(Topic_List)).items():
-		print i,key,val
 		List_of_Topic_Dict.append({'name':key,'obs':val,'exp':int(len(Topic_List)*Global_Topic_Count[Global_Keys[i]])})
 		if  List_of_Topic_Dict[-1]['exp']>=List_of_Topic_Dict[-1]['obs']:
 			List_of_Topic_Dict[-1]['pVal']=binom.cdf(List_of_Topic_Dict[-1]['obs'], len(Topic_List),Global_Topic_Count[Global_Keys[i]] )

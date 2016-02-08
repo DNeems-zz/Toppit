@@ -16,6 +16,12 @@ import operator
 from scipy.stats.distributions import binom
 import View_Functions as VF
 
+#Load in pre-trained LDA model 
+L = models.LdaModel.load('app/static/model/All_Drug_Drugs_RM_WC_SPAM.mdl', mmap='r')
+dictionary = corpora.Dictionary.load('app/static/model/All_Drug_Drugs_RM_WC_SPAM.dict')
+
+
+
 @app.route('/autocomplete_drugname',methods=['GET'])
 #Build an autocomplete list for drug names
 def autocomplete():
@@ -112,9 +118,6 @@ def query_drug():
       else:
         At_500 =''
 
-      #Load in pre-trained LDA model 
-      L = models.LdaModel.load('app/static/model/All_Drug_Drugs_RM_WC_SPAM.mdl', mmap='r')
-      dictionary = corpora.Dictionary.load('app/static/model/All_Drug_Drugs_RM_WC_SPAM.dict')
 
       #Build and stylize topic list for selected topics        
       #Assign Topics
