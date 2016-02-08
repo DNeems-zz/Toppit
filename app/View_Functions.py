@@ -127,15 +127,15 @@ def Build_WordCloud_Input(Tokens,Corpus_Dict,size_freq_mod = 75.0, num_words = 1
 	returns:
 	Word_Cloud --  Input for D#.js Word_Cloud function
 	"""
-    All_Tokens = []
-    for T in Tokens:
-        All_Tokens.extend([Corpus_Dict[x[0]] for x in Corpus_Dict.doc2bow(T)])
-    Token_Freq = dict(Counter(All_Tokens))
-    Sorted_Token_Freq = sorted(Token_Freq.items(), key=operator.itemgetter(1),reverse = True)
-    Word_Cloud =[]
-    for x in Sorted_Token_Freq:
-        tempDict = {}
-        tempDict['text']=x[0]
-        tempDict['size']=int(round(x[1]*size_freq_mod/Sorted_Token_Freq[0][1]))
-        Word_Cloud.append(tempDict)
-    return Word_Cloud[:num_words]
+	All_Tokens = []
+	for T in Tokens:
+	    All_Tokens.extend([Corpus_Dict[x[0]] for x in Corpus_Dict.doc2bow(T)])
+	Token_Freq = dict(Counter(All_Tokens))
+	Sorted_Token_Freq = sorted(Token_Freq.items(), key=operator.itemgetter(1),reverse = True)
+	Word_Cloud =[]
+	for x in Sorted_Token_Freq:
+	    tempDict = {}
+	    tempDict['text']=x[0]
+	    tempDict['size']=int(round(x[1]*size_freq_mod/Sorted_Token_Freq[0][1]))
+	    Word_Cloud.append(tempDict)
+	return Word_Cloud[:num_words]

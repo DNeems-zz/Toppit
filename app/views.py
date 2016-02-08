@@ -100,13 +100,14 @@ def query_drug():
       Product_Info = {'name': product_name,'id':Product_ID[0],'spam': len(Result)-len(Good_Result),'other':len(Good_Result),'total':len(Result),'spam rate':'%0.002f%%' % (float(len(Result)-len(Good_Result))/len(Result)*100)}
       
       #Open stored tokenized comments for the selected drug
-      File = 'Comments for %s' % Product_ID[0]
-      with open('app/static/Tokens/drug/'+ File,'rb') as f:
-        Comments = pickle.load(f)
-      Tokens = [x['Tokens'] for x in Comments]
+      File = 'Comments for %s.txt' % Product_ID[0]
+      Tokens = []
+      with open('app/static/Tokens/only token txt/'+ File,'rb') as f:
+        for line in f:
+          Tokens.append(line.strip().split(','))
       # Looks to see if the file has exactly 500 comments in it, because if it does that means that total topics have been cut off to the top 500 comments by score 
       # and is only reporting those comments in the topic list and word bubble.  This then triggers a warning a string to let the user know this happened on the page that returns  
-      if len(Comments) == 500:
+      if len(Tokens) == 500:
         At_500 = 'Only Data for the Top 500 Posts are Shown'
       else:
         At_500 =''
