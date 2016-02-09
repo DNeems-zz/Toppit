@@ -63,8 +63,8 @@
       <div class="starter-template">
           <h2>Topics Discovered in Reddit Comments  </h2>
           <p>Topics were generated from 102,597 Reddit comments (documents) that mention at least one of 1,431 medical products by name.  These documents were broken down into single words (tokens) and used to generate a corpus of text. Each circle is a topic and the size is the percent of tokens found in that topic.</p>
-          <p>The corpus was used to fit a Latent Dirichlet Allocation(LDA) generative model with ten topic groups to create classifications for topics on Reddit or Toppits.  Below is a graphical representation of this model reduced to two-dimensional space through Jensen-Shannon Divergence and  Principal Components  analysis.</p>    
-          <p><i>Mouse over each circle to see the words that make up a topic and mouse over words to see the contribution of individual words to a topic. At the bottom of the page, topics for single medical products can be queried</i></p>
+          <p>The corpus was used to fit a Latent Dirichlet Allocation (LDA) generative model with ten topic groups to create classifications for topics on Reddit or Toppits.  Below is a graphical representation of this model reduced to two-dimensional space through Jensen-Shannon Divergence and  Principal Components  analysis.</p>    
+          <p><i>Mouse over each circle to see the words that make up a topic. Mouse over words to see the contribution of individual words to a topic. At the bottom of the page, topics for single medical products can be queried.</i></p>
       </div>
       
       <iframe src="/static/Viz_10Topic.html"  width="1270" height="800", frameBorder="0"></iframe>
@@ -72,7 +72,7 @@
       
     <div class = "container">
       <p style = "font-size: 20px; padding-bottom: 10px;"> Topic Interpretation</p>
-      <p>The fields below are pre-populated with educated guesses made by interpreting the collection of words found in each LDA topic group.  These labels are used to describe the individual topic groups as they pertain to single medical products.  If a different classification is desired the topic name can be changed  </p>
+      <p>The fields below are prepopulated with educated guesses made by interpreting the collection of words found in each LDA topic group.  These labels are used to describe the individual topic groups as they pertain to single medical products.  If a different classification is desired the topic name can be changed.  </p>
       <form  action="/Single_Drug" method="GET">
       
         <table   width = "1200">
@@ -126,7 +126,7 @@
 
       <div class="starter-template">
         <h2>Classification of Medical Products by Topic</h2>
-        <p>Enter a medical product and a number of subreddits to see the conversations surrounding it and in what subreddits they are happening</p>
+        <p>Enter a medical product and a number of subreddits to see the conversations surrounding the prodcut. Also see what subreddits the conversation are occurring within </p>
       </div>
       
       <table>
