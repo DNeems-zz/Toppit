@@ -17,8 +17,8 @@ from scipy.stats.distributions import binom
 import View_Functions as VF
 
 #Load in pre-trained LDA model 
-L = models.LdaModel.load('app/static/model/All_Drug_Drugs_RM_WC_SPAM.mdl', mmap='r')
-dictionary = corpora.Dictionary.load('app/static/model/All_Drug_Drugs_RM_WC_SPAM.dict')
+L = models.LdaModel.load('app/static/model/Drugs under 5 percent rm wcSPAM_10Topic_Redo.mdl', mmap='r')
+dictionary = corpora.Dictionary.load('app/static/model/Drugs under 5 percent rm wcSPAM.dict')
 
 
 
@@ -122,6 +122,7 @@ def query_drug():
       #Build and stylize topic list for selected topics        
       #Assign Topics
       Ordered_Topic_List=VF.Comment_Topic_ID(L,dictionary,Tokens)
+      print Ordered_Topic_List
       #Open global topic freqeuncy list
       Topic_Counts = VF.Build_Global_Freq_Dict('app/static/Data/Total_Topic_Freq.txt')
       #Calculate pVals with a binomail CDF test
