@@ -57,51 +57,51 @@
     <!-- Table to report the top 25 most mentioned drugs over all -->
     <div class="container">
     <h3>Top 25 Drugs by total number of posts </h3>
-      <table class="table table-hover", style ="margin-top: 2cm;">
+      <table class="table table-hover", style ="margin-top: 0.5cm; margin-bottom: 2cm;">
         <tr style ="font-size:20px;">
           <th >Name</th>
-          <th>Total Posts</th>
-          <th>Percent Spam</th>
+          <th style = "text-align:center;">Total Posts</th>
+          <th style = "text-align:center;">Percent Spam</th>
         </tr>
         {% for drug in Top_Mentions %}
         <tr>
           <td>{{ drug[0]}}</td>
-          <td>{{ drug[4]}}</td>
-          <td>{{ drug[3] }}</td>
+          <td style = "text-align:center;">{{ drug[4]}}</td>
+          <td style = "text-align:center;">{{ drug[3] }}</td>
         </tr>
         {% endfor %}
       </table>
 
     <!-- Table to report the top 25 most mentioned drugs after all spam posts are removed -->
     <h3>Top 25 Drugs by total number of non-spam posts </h3>
-      <table class="table table-hover", style ="margin-top: 2cm;">
+      <table class="table table-hover", style ="margin-top: 0.5cm; margin-bottom: 2cm;">
         <tr style ="font-size:20px;">
           <th >Name</th>
-          <th>Non-Spam Posts</th>
-          <th>Total Posts</th>
+          <th style = "text-align:center;">Non-Spam Posts</th>
+          <th style = "text-align:center;">Total Posts</th>
         </tr>
         {% for drug in Top_Good_Mentions %}
         <tr>
-          <td>{{ drug[0]}}</td>
-          <td>{{ drug[1]}}</td>
-          <td> {{ drug[4] }}</td>
+          <td >{{ drug[0]}}</td>
+          <td style = "text-align:center;">{{ drug[1]}}</td>
+          <td style = "text-align:center;"> {{ drug[4] }}</td>
         </tr>
         {% endfor %}
       </table>
 
     <!-- Table to report the top 25 subreddits by normalized score -->
     <h3>Top 25 Drugs Subreddits for drug conversations </h3>
-      <table class="table table-hover", style ="margin-top: 2cm;">
+      <table class="table table-hover", style =style ="margin-top: 0.5cm; margin-bottom: 2cm;">
         <tr style ="font-size:20px;">
           <th >Name</th>
-          <th>Normalized Post count*</th>
-          <th>Post in Subreddit</th>
+          <th style = "text-align:center;">Normalized Post count*</th>
+          <th style = "text-align:center;">Post in Subreddit</th>
         </tr>
         {% for drug in Top_SRs %}
         <tr>
           <td>{{ drug[0]}}</td>
-          <td>{{ drug[2]}}</td>
-          <td> {{ drug[1] }}</td>
+          <td style = "text-align:center;">{{ drug[2]}}</td>
+          <td style = "text-align:center;"> {{ drug[1] }}</td>
         </tr>
         {% endfor %}
       </table>
