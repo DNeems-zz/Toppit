@@ -15,10 +15,12 @@ from collections import Counter
 import operator
 from scipy.stats.distributions import binom
 import View_Functions as VF
+import re
 
 #Load in pre-trained LDA model 
 L = models.LdaModel.load('app/static/model/All_Drug_Drugs_RM_WC_SPAM.mdl', mmap='r')
 dictionary = corpora.Dictionary.load('app/static/model/All_Drug_Drugs_RM_WC_SPAM.dict')
+Topic = [[] for x in range(10)]
 
 
 
@@ -70,7 +72,6 @@ def query_drug():
   #Number of Subreddits requested
   requested_subreddits = int(request.args.get('Num_SR'))
   #Pulls the name of each the user inputed topic feilds from below the model 
-  Topic = [[] for x in range(10)]
   Topic[0] = request.args.get('Topc1')
   Topic[1] = request.args.get('Topc2')
   Topic[2] = request.args.get('Topc3')
@@ -108,7 +109,7 @@ def query_drug():
       #Open stored tokenized comments for the selected drug
       File = 'Comments for %s.txt' % Product_ID[0]
       Tokens = []
-      with open('app/static/Tokens/only token txt/'+ File,'rb') as f:
+      with open('app/static/Tokens/token txt with ID/'+ File,'rb') as f:
         for line in f:
           Tokens.append(line.strip().split(','))
       # Looks to see if the file has exactly 500 comments in it, because if it does that means that total topics have been cut off to the top 500 comments by score 
@@ -117,22 +118,26 @@ def query_drug():
         At_500 = 'Only Data for the Top 500 Posts are Shown'
       else:
         At_500 =''
-
-
+      Content_ID_List = []
+      [Content_ID_List.append(x.pop(0)) for x in Tokens]
       #Build and stylize topic list for selected topics        
       #Assign Topics
-      Ordered_Topic_List=VF.Comment_Topic_ID(L,dictionary,Tokens)
+      Ordered_Topic_List_with_ID=VF.Comment_Topic_ID(L,dictionary,Tokens)
+      Ordered_Topic_List = [x[0] for x in Ordered_Topic_List_with_ID]
+      for pos in range(len(Ordered_Topic_List_with_ID)):
+      	Ordered_Topic_List_with_ID[pos] = Ordered_Topic_List_with_ID[pos] +(Content_ID_List[pos],)
+      Top_Sorted_Topic=VF.Top_Comments_byTopic(Ordered_Topic_List_with_ID)
       #Open global topic freqeuncy list
       Topic_Counts = VF.Build_Global_Freq_Dict('app/static/Data/Total_Topic_Freq.txt')
       #Calculate pVals with a binomail CDF test
       Topic_List=VF.Compute_Binomial_Prob(Ordered_Topic_List,Topic_Counts)
+      print Topic_List
       #Change Key values to names
-      for p in Topic_List:
+      for i,p in enumerate(Topic_List):
+      	p['Top Comment']=Top_Sorted_Topic[int(p['name'])-1]
         p['name'] = Topic[int(p['name'])-1]
       #Style table for a return to the HTML based on the pValues from the previosu test
       Topic_List=VF.Style_from_pVal(Topic_List)
-
-
       #Build Dictionary for word cloud
       Word_Cloud =VF.Build_WordCloud_Input(Tokens,dictionary)
       #SECTION ON SUBREDDIT FREQ 
@@ -145,8 +150,9 @@ def query_drug():
       for SR in SR_List:
         SR['url'] = SR['name']
       SR_List=VF.Style_from_pVal(SR_List)
+
       return render_template("Single_Drug.html", prod_table = Product_Info, num_subreddits = requested_subreddits,
-      drug =product_name, Word_Cloud=Word_Cloud, Topic_List = Topic_List, Warning=At_500, subreddits=SR_List[:requested_subreddits]) 
+      drug =product_name, Word_Cloud=Word_Cloud, Topic_List = Topic_List, Warning=At_500, subreddits=SR_List[:requested_subreddits], Topic_ID=Top_Sorted_Topic) 
 
   else: 
     #Return if the drug name is not found or if it is 100% spam posts that are found
@@ -156,3 +162,25 @@ def query_drug():
       Source = '100 Percent of ' +product_name + ' mentions were spam'
     return render_template("No_Drug.html", Source=Source)
 
+@app.route('/Topic_Comments')
+def show_comment():
+    Topic_List = request.args.get('Topic')
+    Topic_Name = request.args.get('Topic_Name')
+    print request
+    print 
+    Topic_Name = re.sub(r'<font.*">','',Topic_Name)
+    Topic_Name = re.sub(r'<.*','',Topic_Name)
+    Topic_List = [str.replace(str(x),'(','') for x in Topic_List.split('),')]
+    Topic_List[0] =Topic_List[0][1:]
+    Topic_List[-1] =Topic_List[-1][:-2]
+    con = mdb.connect('localhost', 'root', '', 'epi_reddit',charset='utf8', init_command='SET NAMES UTF8')
+    Comments = []
+    with con:
+    	for T in Topic_List: 
+    		cur = con.cursor()
+    		sql_statement = """SELECT body FROM content WHERE content_ID LIKE %s""" % T.split(',')[2].strip()
+    		cur.execute(sql_statement)
+    		Comments.append(VF.Bold_Top_Words(cur.fetchone()[0],dictionary,L,num_terms=1000))
+    print Comments[-2]
+    
+    return render_template("Topic_Comments.html",  Comments=Comments, Num_Comments =len(Comments), terms =1000 ,Topic_Name=Topic_Name)

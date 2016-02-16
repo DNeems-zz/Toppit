@@ -109,7 +109,13 @@
                 <td>{{ entry['name'] |safe}}</td>
                 <td>{{ entry['obs'] | safe }}</td>
                 <td>{{ entry['status'] | safe}}</td>
-
+                <td> <form  action="/Topic_Comments" method="GET">
+                     <input type='Hidden' id="Topic" name='Topic' value= "{{entry['Top Comment']}}" placeholder="e.g. ">
+                    <input type='Hidden' id="Topic_Name" name='Topic_Name' value= "{{entry['name']}}" placeholder="e.g. ">
+                 
+                       <button id= 'Display_Comments_{{ loop.index }}'  type="submit" class="btn btn-default btn-sm">Show Comments</button>
+                     </form>
+                     </td>
               </tr>
               {% endfor %}
             </table>

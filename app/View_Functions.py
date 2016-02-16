@@ -2,6 +2,10 @@
 from scipy.stats.distributions import binom
 from collections import Counter
 import operator
+import pickle
+import sys
+from Text_Processing import clean as clean
+
 
 def Ranked_List(inputfile, sort_col=1, number_entires = 25, desecending = True):
 	"""creates a list from a file that is ranked and then returns the top number of elements .
@@ -44,12 +48,12 @@ def Comment_Topic_ID(LDA_Model,Corpus_Dict,List_of_Tokens,Topic_Order = [6,10,9,
 		for F in Fit:
 			if F[1]>tempTopic[1]:
 				tempTopic = F
-		Topic_List.append(tempTopic[0])
+		Topic_List.append(tempTopic)
 	#Reorder the returned topics to 
 
 	Ordered_Topic_List = []
 	for T in Topic_List:
-		Ordered_Topic_List.append(Topic_Order[T])
+		Ordered_Topic_List.append((Topic_Order[T[0]],T[1]))
 	return Ordered_Topic_List
 
 def Build_Global_Freq_Dict(filename):
@@ -138,3 +142,38 @@ def Build_WordCloud_Input(Tokens,Corpus_Dict,size_freq_mod = 75.0, num_words = 1
 	    tempDict['size']=int(round(x[1]*size_freq_mod/Sorted_Token_Freq[0][1]))
 	    Word_Cloud.append(tempDict)
 	return Word_Cloud[:num_words]
+
+def Top_Comments_byTopic(Topic_Matix,num_comment =5, num_topics=10):
+	""" Take a list of tuples (Topic #, percent match, content ID) return a list of the top
+	    comments by percent match score
+	Keywords:
+	Topic_Matrix -- tuples (Topic #, percent match, content ID)
+	num_comments -- number of top comments to return
+	returns:
+	Word_Cloud --  List of Top num_comments tupples
+	"""
+	Top_Topic = [[] for x in range(num_topics)]
+	for T in Topic_Matix:
+		Top_Topic[T[0]-1].append(T)
+	Sorted_Topic = []
+	for T in Top_Topic:
+		Sorted_Topic.append(sorted(T,key=lambda x: x[1],reverse=True))
+		Sorted_Topic[-1] =Sorted_Topic[-1][:num_topics]
+	return Sorted_Topic
+
+
+def Bold_Top_Words(Comment,Corpus_Dict,model, num_terms=1000):
+    """
+    """
+    Tokens = clean(Comment).split()
+    Fit = model.get_document_topics(Corpus_Dict.doc2bow(Tokens),minimum_probability = 0)
+    Topic =  sorted(Fit, key=lambda x:x[1],reverse = True)[0][0]
+    print Topic
+    terms = [Corpus_Dict[x[0]] for x in model.get_topic_terms(Topic,topn = 1000)]
+    HTML_Comment = []
+    for word in Tokens:
+    	if word.lower() in set(Tokens) & set(terms):
+    		HTML_Comment.append('<strong>' + word + '</strong>')
+    	else:
+    		HTML_Comment.append(word)
+    return ' '.join(HTML_Comment)
