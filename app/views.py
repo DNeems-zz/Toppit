@@ -18,8 +18,8 @@ import View_Functions as VF
 import re
 
 #Load in pre-trained LDA model 
-L = models.LdaModel.load('app/static/model/All_Drug_Drugs_RM_WC_SPAM.mdl', mmap='r')
-dictionary = corpora.Dictionary.load('app/static/model/All_Drug_Drugs_RM_WC_SPAM.dict')
+L = models.LdaModel.load('app/static/model/Drugs wcSPAM_10Topic_100_iterations_1000_passes_2.mdl', mmap='r')
+dictionary = corpora.Dictionary.load('app/static/model/Drugs wcSPAM.dict')
 Topic = [[] for x in range(10)]
 
 

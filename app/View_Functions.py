@@ -25,7 +25,7 @@ def Ranked_List(inputfile, sort_col=1, number_entires = 25, desecending = True):
 		Top_List = sorted(Top_List,key=lambda x: float(x[sort_col]),reverse=desecending)
 	return Top_List[:number_entires]
 
-def Comment_Topic_ID(LDA_Model,Corpus_Dict,List_of_Tokens,Topic_Order = [6,10,9,5,1,2,3,7,4,8]):
+def Comment_Topic_ID(LDA_Model,Corpus_Dict,List_of_Tokens,Topic_Order = [1, 5, 7, 9, 4, 3, 2, 10, 6, 8]):
 
 	"""Take's in a list of comments as tokens and returns a list of assigned topic 
 	IDs that have been transfomed have numbers that match the LDA visulization
